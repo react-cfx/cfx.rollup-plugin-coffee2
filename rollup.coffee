@@ -1,9 +1,9 @@
 # import coffee2 from 'rollup-plugin-coffee2'
 import alias from 'rollup-plugin-alias'
 
-# import coffee2 from './src'
+import coffee2 from './src'
 # import coffee2 from './dist/bundle'
-import coffee2 from 'cfx.rollup-plugin-coffee2'
+# import coffee2 from 'cfx.rollup-plugin-coffee2'
 
 export default
   input: './index.js'
