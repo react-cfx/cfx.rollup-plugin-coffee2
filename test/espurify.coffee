@@ -10,6 +10,8 @@ import {
 
 jsCode = 'import calc from "../src";'
 
+jsCode = 'import calc from "hello/world";'
+
 originalAst = ricffAST getAST jsCode
 
 # dd originalAst

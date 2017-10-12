@@ -8,3 +8,10 @@
 1. 支持直接 import xxx from "./#{pkgname}" 的写法，
    默认查找 "./#{pkgname}.coffee" / "./#{pkgname}/index.coffee"，
    找不到会替换为 '.js'
+
+### 常用 Plugins
+
+* rollup-plugin-alias
+* rollup-plugin-buble
+* rollup-plugin-node-resolve
+* rollup-plugin-commonjs

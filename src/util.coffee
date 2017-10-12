@@ -10,21 +10,42 @@ import escodegen from 'escodegen'
 
 # real coffee file Path
 rCFPath = (filePath) =>
-  fileObj = {
-    exists: fs.existsSync filePath
-    (path.parse filePath)...
+
+  getFileObj = (file) -> {
+    exists: fs.existsSync file
+    (path.parse file)...
   }
+
+  fileObj = getFileObj filePath
+
   unless fileObj.exists # file isnt exists
-    return filePath if fileObj.ext is '.js'
-    if fileObj.ext is '.coffee'
-      return rCFPath path.format
-        root: '/ignored'
-        dir: fileObj.dir
-        base: fileObj.base
-        name: 'ignored'
-        ext: '.js'
-    else return rCFPath "#{filePath}.coffee"
+
+    fileObj = 
+      coffee: do ->
+        _path = path.format {
+          root: path.join fileObj.root, fileObj.dir + '/'
+          name: fileObj.base
+          ext: '.coffee'
+        }
+        path: _path
+        obj: getFileObj _path
+      js: do ->
+        _path = path.format {
+          root: path.join fileObj.root, fileObj.dir + '/'
+          name: fileObj.base
+          ext: '.js'
+        }
+        path: _path
+        obj: getFileObj _path
+
+    if fileObj.coffee.obj.exists
+      return rCFPath fileObj.coffee.path
+    if fileObj.js.obj.exists
+      return rCFPath fileObj.js.path
+    return null
+
   else # file exists
+
     unless fileObj.ext is '' # isnt dir
     then return filePath
     else return rCFPath path.join filePath, 'index.coffee'
@@ -40,10 +61,12 @@ ricffAST = (ast, dirname = __dirname) =>
           fileParseObj.root is '' and
           fileParseObj.dir is ''
         )
+
         filePath = rCFPath path.join dirname
         , currentNode.source.value
+
         # dd filePath
-        currentNode.source.value = filePath
+        currentNode.source.value = filePath if filePath?
         # dd espurify currentNode
       currentNode
 
