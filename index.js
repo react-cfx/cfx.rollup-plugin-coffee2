@@ -1,2 +1,4 @@
-import coffee2 from 'src';
-export default coffee2;
+export {
+  coffee2,
+  coffeepath
+} from 'src';

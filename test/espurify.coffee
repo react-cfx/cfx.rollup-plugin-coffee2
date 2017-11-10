@@ -12,6 +12,12 @@ jsCode = 'import calc from "../src";'
 
 jsCode = 'import calc from "hello/world";'
 
+# jsCode = """
+#   async function a() {
+#     await request('url');
+#   };
+# """
+
 originalAst = ricffAST getAST jsCode
 
 # dd originalAst
