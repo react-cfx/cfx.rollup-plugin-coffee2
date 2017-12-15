@@ -1,4 +1,4 @@
 export {
   coffee2,
   coffeepath
-} from 'src';
+} from './src/index.coffee';

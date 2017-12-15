@@ -1,12 +1,11 @@
+# import dd from 'ddeyes'
 import path from 'path'
 import fs from 'fs'
 
-# import dd from 'ddeyes'
-# import espurify from 'espurify'
-
-import * as acorn from 'acorn'
-import estraverse from 'estraverse'
-import escodegen from 'escodegen'
+import * as babylon from 'babylon'
+import traverse from '@babel/traverse'
+import * as t from '@babel/types'
+import transform from 'cfx.babel'
 
 # real coffee file Path
 rCFPath = (filePath) =>
@@ -52,39 +51,40 @@ rCFPath = (filePath) =>
 
 # replace import coffee file from AST
 ricffAST = (ast, dirname = __dirname) =>
-  estraverse.replace ast
+
+  traverse ast
   ,
-    leave: (currentNode, parentNode) ->
-      if currentNode.type is 'ImportDeclaration'
-        fileParseObj = path.parse currentNode.source.value
-        return currentNode if (
-          fileParseObj.root is '' and
-          fileParseObj.dir is ''
-        )
+    ImportDeclaration: (_ast) ->
 
-        filePath = rCFPath path.join dirname
-        , currentNode.source.value
+      currentNode = _ast.node
 
-        # dd filePath
-        currentNode.source.value = filePath if filePath?
-        # dd espurify currentNode
-      currentNode
+      fileParseObj = path.parse currentNode.source.value
+
+      return if (
+        fileParseObj.root is '' and
+        fileParseObj.dir is ''
+      )
+
+      filePath = rCFPath path.join dirname
+      , currentNode.source.value
+
+      _ast.node.source = t.StringLiteral filePath if filePath?
+
+      return
+
+  ast
 
 getAST = (source) =>
-  comments = []
-  tokens = []
 
-  acorn.parse source
+  babylon.parse source
   ,
     sourceType: 'module'
-    # collect ranges for each node
-    ranges: true
-    # collect comments in Esprima's format
-    onComment: comments
-    # collect token ranges
-    Token: tokens
+    
 
-ASTToCode = (ast) -> escodegen.generate ast
+ASTToCode = (ast) -> 
+  transform ast
+  # ,
+  #   regenerator: true
 
 export {
   rCFPath

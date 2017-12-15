@@ -15,12 +15,6 @@ export default
     file: './dist/bundle.js'
     format: 'cjs'
   plugins: [
-    alias
-      resolve: [
-        '.coffee'
-        '.js'
-      ]
-      src: './src/index'
     coffee2
       bare: true
       sourceMap: true
