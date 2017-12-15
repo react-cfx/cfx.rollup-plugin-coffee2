@@ -1,5 +1,4 @@
 # import coffee2 from 'rollup-plugin-coffee2'
-import alias from 'rollup-plugin-alias'
 import cleanup from 'rollup-plugin-cleanup'
 
 import {
